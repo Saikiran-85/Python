@@ -1,0 +1,40 @@
+import csv
+
+def find_minimum_price(csv_file, food_items):
+    food_items = food_items.split()
+
+    restaurant_data = {}
+
+
+    for row in csv_file:
+        restaurant_id = row['restaurant_id']
+        food_item_name = row['food_item_name']
+        food_item_price = row['food_item_price']
+            
+        if restaurant_id not in restaurant_data:
+            restaurant_data[restaurant_id] = {}
+        restaurant_data[restaurant_id][food_item_name] = (food_item_price)
+
+    min_total_price = float('inf')
+    min_restaurant_id = None
+
+    for restaurant_id, menu in restaurant_data.items():
+        if all(item in menu for item in food_items):
+            total_price = sum(menu[item] for item in food_items)
+            
+            if total_price < min_total_price:
+                min_total_price = total_price
+                min_restaurant_id = restaurant_id
+
+    if min_restaurant_id:
+        return f"{min_restaurant_id}, {min_total_price:.2f}"
+    else:
+        return "No matching restaurant found"
+
+csv_file = 'data.csv'
+
+input_1 = "burger tofu_log"
+print(find_minimum_price(csv_file, input_1))  
+
+input_2 = "chef_salad wine_spritzer"
+print(find_minimum_price(csv_file, input_2))  
